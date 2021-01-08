@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\DB; 
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -68,8 +70,49 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            //'password' => Hash::make($data['password']),
+            'password' => $data['password'],
             'gender'=>$data['gender'],
+            'last_name'=>$data['gender'],
+            'dob'=>$data['dob'],
+            'mobile'=>$data['mobile'],
+            'address'=>$data['address'],
+            'city'=>$data['city'],
         ]);
+    }
+
+    public function mailform() {
+
+        return view('mailform');
+        // $receiver = "ganjichinmaya5@gmail.com";
+        // $subject = "Email Test via PHP using Localhost from laravel";
+        // $body = "Hi, there...This is a test email send from Localhost-2.";
+        // $sender = "From:orchard.training.1@gmail.com";
+    
+        // if(mail($receiver, $subject, $body, $sender)){
+        //     echo "Email sent successfully to $receiver";
+        // }else{
+        //     echo "Sorry, failed while sending mail!";
+        // }
+    }
+
+    public function sendmail(Request $request) {
+        //dd($request->all());
+        //dd($request['email']);
+        //$receiver = "srihi1998@gmail.com";
+        $receiver = $request['email'];
+        //dd($receiver);
+        //$password=123;
+        $password = DB::table('users')->where('email', $receiver)->first()->password;
+        //dd($password);
+        $subject = "Forgot password";
+        $body = "Hi, there...This is a test email  from EMS your password is :". $password;
+        $sender = "From:orchard.training.1@gmail.com";
+    
+        if(mail($receiver, $subject, $body, $sender)){
+            echo "Email sent successfully to $receiver";
+        }else{
+            echo "Sorry, failed while sending mail!";
+        }
     }
 }
