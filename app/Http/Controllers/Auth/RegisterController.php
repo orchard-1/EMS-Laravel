@@ -103,16 +103,27 @@ class RegisterController extends Controller
         $receiver = $request['email'];
         //dd($receiver);
         //$password=123;
-        $password = DB::table('users')->where('email', $receiver)->first()->password;
-        //dd($password);
-        $subject = "Forgot password";
-        $body = "Hi, there...This is a test email  from EMS your password is :". $password;
-        $sender = "From:orchard.training.1@gmail.com";
-    
-        if(mail($receiver, $subject, $body, $sender)){
-            echo "Email sent successfully to $receiver";
+        $user=User::whereEmail($request->email)->first();
+        //dd($user);
+
+        if($user){
+            $password = DB::table('users')->where('email', $receiver)->first()->password;
+            $subject = "Forgot password";
+            $body = "Hi, there...This is a test email  from EMS your password is :". $password;
+            $sender = "From:orchard.training.1@gmail.com";
+        
+            if(mail($receiver, $subject, $body, $sender)){
+                echo "Email sent successfully to $receiver";
+            }else{
+                echo "Sorry, failed while sending mail!";
+            }
         }else{
-            echo "Sorry, failed while sending mail!";
+            //echo('email does not exists');
+            redirect('login')->with('error','Email doesnot Exists');
+            //die();
         }
+       
+        //dd($password);
+       
     }
 }

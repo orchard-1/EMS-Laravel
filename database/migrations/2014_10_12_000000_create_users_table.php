@@ -20,10 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-           
             $table->timestamps();
-            //$table->bigIncrements('emp_id');
-           
             $table->string('last_name');
             $table->string('mobile');
             $table->date('dob');
@@ -31,13 +28,13 @@ class CreateUsersTable extends Migration
             $table->text('address');
             $table->string('city');
             $table->string('user_type')->default("normal");
-          
+            $table->foreignId('manager_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             
             // $table->bigInteger('manager_id')->nullable();
             // $table->foreign('manager_id')->references('id')
             //     ->on('users');
 
-                $table->foreignId('manager_id')->nullable()->references('id')->on('users')->onDelete('cascade');
+               
         });
     }
 
